@@ -3,6 +3,7 @@ package com.game254studios.kakaandchui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.game254studios.kakaandchui.analytics.AnalyticsManager
 import com.game254studios.kakaandchui.data.local.KakaDatabase
 import com.game254studios.kakaandchui.data.local.UserPreferences
 import com.game254studios.kakaandchui.data.model.AchievementDef
@@ -80,6 +81,21 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val profile = gameRepo.getOrCreateDefaultProfile()
             val reward = gameRepo.saveQuizResult(profile.id, module.name, score, total)
+
+            val stars = when {
+                total == 0 -> 0
+                score == total -> 3
+                score >= total * 2 / 3 -> 2
+                score >= total / 3 -> 1
+                else -> 0
+            }
+            AnalyticsManager.getInstance(getApplication()).logQuizCompleted(
+                moduleName = module.name,
+                score = score,
+                total = total,
+                stars = stars
+            )
+
             _state.value = _state.value.copy(
                 isFinished = true,
                 xpEarned = reward.xpEarned,

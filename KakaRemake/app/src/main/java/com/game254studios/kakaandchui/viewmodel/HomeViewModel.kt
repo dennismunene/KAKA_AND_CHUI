@@ -3,6 +3,7 @@ package com.game254studios.kakaandchui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.game254studios.kakaandchui.analytics.AnalyticsManager
 import com.game254studios.kakaandchui.data.local.KakaDatabase
 import com.game254studios.kakaandchui.data.local.UserPreferences
 import com.game254studios.kakaandchui.data.repository.GameRepository
@@ -25,12 +26,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val db = KakaDatabase.getInstance(application)
     private val prefs = UserPreferences(application)
     val gameRepo = GameRepository(db, prefs)
+    private val analyticsManager = AnalyticsManager.getInstance(application)
 
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
     init {
         loadState()
+    }
+
+    fun logModuleStarted(moduleName: String) {
+        analyticsManager.logModuleStarted(moduleName)
     }
 
     fun loadState() {
