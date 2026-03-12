@@ -1,12 +1,19 @@
 package com.game254studios.kakaandchui.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.game254studios.kakaandchui.data.local.KakaDatabase
+import com.game254studios.kakaandchui.data.local.UserPreferences
+import com.game254studios.kakaandchui.data.model.AchievementDef
 import com.game254studios.kakaandchui.data.model.LearningItem
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.data.repository.ContentRepository
+import com.game254studios.kakaandchui.data.repository.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class QuizState(
     val currentIndex: Int = 0,
@@ -17,25 +24,35 @@ data class QuizState(
     val options: List<LearningItem> = emptyList(),
     val currentItem: LearningItem? = null,
     val allItems: List<LearningItem> = emptyList(),
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val xpEarned: Int = 0,
+    val coinsEarned: Int = 0,
+    val newAchievements: List<AchievementDef> = emptyList()
 )
 
-class QuizViewModel : ViewModel() {
+class QuizViewModel(application: Application) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(QuizState())
     val state: StateFlow<QuizState> = _state.asStateFlow()
 
+    private val db = KakaDatabase.getInstance(application)
+    private val prefs = UserPreferences(application)
+    private val gameRepo = GameRepository(db, prefs)
+
     private var shuffledItems: List<LearningItem> = emptyList()
     private var allModuleItems: List<LearningItem> = emptyList()
+    private var currentModule: Module? = null
 
     fun loadModule(module: Module) {
+        currentModule = module
         allModuleItems = ContentRepository.getItems(module)
         shuffledItems = allModuleItems.shuffled()
+        _state.value = QuizState()
         loadQuestion(0)
     }
 
     private fun loadQuestion(index: Int) {
         if (index >= shuffledItems.size) {
-            _state.value = _state.value.copy(isFinished = true)
+            finishQuiz()
             return
         }
         val currentItem = shuffledItems[index]
@@ -53,6 +70,23 @@ class QuizViewModel : ViewModel() {
             allItems = shuffledItems,
             isFinished = false
         )
+    }
+
+    private fun finishQuiz() {
+        val score = _state.value.score
+        val total = shuffledItems.size
+        val module = currentModule ?: return
+
+        viewModelScope.launch {
+            val profile = gameRepo.getOrCreateDefaultProfile()
+            val reward = gameRepo.saveQuizResult(profile.id, module.name, score, total)
+            _state.value = _state.value.copy(
+                isFinished = true,
+                xpEarned = reward.xpEarned,
+                coinsEarned = reward.coinsEarned,
+                newAchievements = reward.newAchievements
+            )
+        }
     }
 
     fun selectAnswer(itemId: String) {

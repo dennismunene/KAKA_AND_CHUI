@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 fun QuizScreen(
     module: Module,
     onBack: () -> Unit,
-    onQuizFinished: (score: Int, total: Int) -> Unit,
+    onQuizFinished: (score: Int, total: Int, xpEarned: Int, coinsEarned: Int) -> Unit,
     quizViewModel: QuizViewModel = viewModel()
 ) {
     val state by quizViewModel.state.collectAsState()
@@ -83,7 +83,7 @@ fun QuizScreen(
     LaunchedEffect(state.isFinished) {
         if (state.isFinished) {
             audioPlayer.stop()
-            onQuizFinished(state.score, state.allItems.size)
+            onQuizFinished(state.score, state.allItems.size, state.xpEarned, state.coinsEarned)
         }
     }
 

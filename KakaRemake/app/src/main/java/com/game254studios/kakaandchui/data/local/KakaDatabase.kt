@@ -9,7 +9,7 @@ import com.game254studios.kakaandchui.data.local.entity.*
 
 @Database(
     entities = [UserProfile::class, ModuleProgress::class, Achievement::class, DailyStreak::class, CoinBalance::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class KakaDatabase : RoomDatabase() {
