@@ -11,17 +11,28 @@ android {
     namespace = "com.game254studios.kakaandchui"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            // TODO: Configure with actual keystore before release
+            // storeFile = file("path/to/keystore.jks")
+            // storePassword = System.getenv("KEYSTORE_PASSWORD")
+            // keyAlias = System.getenv("KEY_ALIAS")
+            // keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.game254studios.kakaandchui"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
+        versionCode = 200
         versionName = "2.0.0"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
