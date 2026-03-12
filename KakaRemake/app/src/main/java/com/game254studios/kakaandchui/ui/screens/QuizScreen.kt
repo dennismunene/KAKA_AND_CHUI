@@ -41,6 +41,9 @@ import com.game254studios.kakaandchui.ui.components.AnswerState
 import com.game254studios.kakaandchui.ui.components.ConfettiOverlay
 import com.game254studios.kakaandchui.ui.components.QuizAnswerButton
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import kotlinx.coroutines.delay
 
 @Composable
@@ -53,6 +56,7 @@ fun QuizScreen(
     val state by quizViewModel.state.collectAsState()
     val context = LocalContext.current
     val audioPlayer = remember { AudioPlayer(context) }
+    val hapticFeedback = LocalHapticFeedback.current
 
     LaunchedEffect(module) {
         quizViewModel.loadModule(module)
@@ -68,12 +72,14 @@ fun QuizScreen(
         }
     }
 
-    // Play feedback sound on answer
+    // Play feedback sound and haptic on answer
     LaunchedEffect(state.answered, state.selectedAnswer) {
         if (state.answered && state.selectedAnswer != null) {
             if (state.selectedAnswer == state.correctAnswer) {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                 audioPlayer.playAsset("mfx/correct_answer.mp3")
             } else {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 audioPlayer.playAsset("mfx/sadtrumpet_funny.mp3")
             }
         }
@@ -100,13 +106,16 @@ fun QuizScreen(
                 modifier = Modifier.fillMaxWidth().padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {
-                    audioPlayer.stop()
-                    onBack()
-                }) {
+                IconButton(
+                    onClick = {
+                        audioPlayer.stop()
+                        onBack()
+                    },
+                    modifier = Modifier.sizeIn(minWidth = 64.dp, minHeight = 64.dp)
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = "Go back",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -176,7 +185,7 @@ fun QuizScreen(
                         if (feedbackBitmap != null) {
                             Image(
                                 bitmap = feedbackBitmap,
-                                contentDescription = if (state.selectedAnswer == state.correctAnswer) "Correct" else "Wrong",
+                                contentDescription = if (state.selectedAnswer == state.correctAnswer) "Correct answer!" else "Wrong answer, try again",
                                 modifier = Modifier.size(120.dp)
                             )
                         } else {
@@ -258,7 +267,7 @@ fun QuizScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp, vertical = 8.dp)
-                        .height(48.dp),
+                        .height(64.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary

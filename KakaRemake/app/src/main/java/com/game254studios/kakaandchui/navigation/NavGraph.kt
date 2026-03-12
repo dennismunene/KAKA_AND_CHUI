@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.screens.HomeScreen
 import com.game254studios.kakaandchui.ui.screens.LearnScreen
+import com.game254studios.kakaandchui.ui.screens.ParentZoneScreen
 import com.game254studios.kakaandchui.ui.screens.QuizResultScreen
 import com.game254studios.kakaandchui.ui.screens.QuizScreen
 import com.game254studios.kakaandchui.ui.screens.SplashScreen
@@ -27,6 +28,8 @@ object Routes {
     fun quiz(module: Module) = "quiz/${module.name}"
     fun quizResult(module: Module, score: Int, total: Int, xpEarned: Int, coinsEarned: Int) =
         "quiz_result/${module.name}/$score/$total/$xpEarned/$coinsEarned"
+
+    const val PARENT_ZONE = "parent_zone"
 }
 
 @Composable
@@ -49,7 +52,10 @@ fun NavGraph(navController: NavHostController) {
                 onModuleClick = { module ->
                     navController.navigate(Routes.learn(module))
                 },
-                homeViewModel = homeViewModel
+                homeViewModel = homeViewModel,
+                onNavigateToParentZone = {
+                    navController.navigate(Routes.PARENT_ZONE)
+                }
             )
         }
 
@@ -90,6 +96,10 @@ fun NavGraph(navController: NavHostController) {
                 },
                 quizViewModel = quizViewModel
             )
+        }
+
+        composable(Routes.PARENT_ZONE) {
+            ParentZoneScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(

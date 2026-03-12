@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.game254studios.kakaandchui.data.model.Module
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.game254studios.kakaandchui.ui.theme.StarGold
 
 @Composable
@@ -70,7 +72,7 @@ fun ModuleCard(
                 if (bitmap != null) {
                     Image(
                         bitmap = bitmap,
-                        contentDescription = module.swahiliName,
+                        contentDescription = "${module.swahiliName} - ${module.displayName}",
                         modifier = Modifier.fillMaxSize().padding(4.dp),
                         contentScale = ContentScale.Fit
                     )
@@ -89,7 +91,10 @@ fun ModuleCard(
                 color = MaterialTheme.colorScheme.onSurface
             )
             // Mini star progress indicator
-            Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            Row(
+                modifier = Modifier.semantics { contentDescription = "$stars out of 3 stars" },
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 for (i in 1..3) {
                     Icon(
                         imageVector = if (i <= stars) Icons.Filled.Star else Icons.Outlined.Star,

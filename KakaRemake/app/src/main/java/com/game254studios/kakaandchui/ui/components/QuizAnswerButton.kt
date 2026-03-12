@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 enum class AnswerState { DEFAULT, CORRECT, WRONG }
@@ -66,8 +68,9 @@ fun QuizAnswerButton(
         enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(64.dp)
             .padding(horizontal = 24.dp, vertical = 4.dp)
+            .semantics { contentDescription = "Answer: $text" }
             .scale(scaleAnim.value)
             .offset { IntOffset(shakeOffset.value.dp.roundToPx(), 0) },
         shape = MaterialTheme.shapes.medium,

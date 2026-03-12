@@ -41,6 +41,11 @@ import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.FlashCard
 import com.game254studios.kakaandchui.viewmodel.LearnViewModel
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import kotlinx.coroutines.launch
 
 @Composable
@@ -53,6 +58,7 @@ fun LearnScreen(
     val items by learnViewModel.items.collectAsState()
     val context = LocalContext.current
     val audioPlayer = androidx.compose.runtime.remember { AudioPlayer(context) }
+    val hapticFeedback = LocalHapticFeedback.current
 
     LaunchedEffect(module) {
         learnViewModel.loadModule(module)
@@ -82,13 +88,16 @@ fun LearnScreen(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {
-                audioPlayer.stop()
-                onBack()
-            }) {
+            IconButton(
+                onClick = {
+                    audioPlayer.stop()
+                    onBack()
+                },
+                modifier = Modifier.sizeIn(minWidth = 64.dp, minHeight = 64.dp)
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = "Go back",
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -113,7 +122,10 @@ fun LearnScreen(
             ) { page ->
                 FlashCard(
                     item = items[page],
-                    onTap = { audioPlayer.playAsset(items[page].audioAsset) }
+                    onTap = {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        audioPlayer.playAsset(items[page].audioAsset)
+                    }
                 )
             }
 
@@ -122,10 +134,11 @@ fun LearnScreen(
                 IconButton(
                     onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
                     modifier = Modifier.align(Alignment.CenterStart).padding(4.dp)
+                        .sizeIn(minWidth = 64.dp, minHeight = 64.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Previous",
+                        contentDescription = "Previous item",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp)
                     )
@@ -137,10 +150,11 @@ fun LearnScreen(
                 IconButton(
                     onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                     modifier = Modifier.align(Alignment.CenterEnd).padding(4.dp)
+                        .sizeIn(minWidth = 64.dp, minHeight = 64.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Next",
+                        contentDescription = "Next item",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp)
                     )
@@ -150,7 +164,8 @@ fun LearnScreen(
 
         // Progress dots
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                .semantics { contentDescription = "Item ${pagerState.currentPage + 1} of ${items.size}" },
             horizontalArrangement = Arrangement.Center
         ) {
             items.forEachIndexed { index, _ ->

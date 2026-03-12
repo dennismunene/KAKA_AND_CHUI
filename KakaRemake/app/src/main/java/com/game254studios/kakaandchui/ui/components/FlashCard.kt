@@ -60,7 +60,7 @@ fun FlashCard(
                 if (bitmap != null) {
                     Image(
                         bitmap = bitmap,
-                        contentDescription = item.name,
+                        contentDescription = "${item.name} - tap to hear pronunciation",
                         modifier = Modifier.fillMaxSize().padding(8.dp),
                         contentScale = ContentScale.Fit
                     )

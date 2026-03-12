@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
+import androidx.compose.foundation.layout.sizeIn
 import com.game254studios.kakaandchui.ui.components.StarRating
 import kotlinx.coroutines.delay
 
@@ -181,7 +182,7 @@ fun QuizResultScreen(
                 audioPlayer.stop()
                 onPlayAgain()
             },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 64.dp),
             shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary
@@ -201,7 +202,7 @@ fun QuizResultScreen(
                 audioPlayer.stop()
                 onBackToHome()
             },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 64.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Text(

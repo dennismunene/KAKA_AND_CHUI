@@ -21,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +36,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.ModuleCard
+import com.game254studios.kakaandchui.ui.components.ParentalGate
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(
     onModuleClick: (Module) -> Unit,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    onNavigateToParentZone: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -61,12 +70,14 @@ fun HomeScreen(
     val xpInLevel = homeState.xp % 100
     val xpProgress = xpInLevel / 100f
 
+    var showParentalGate by remember { mutableStateOf(false) }
+
     Box(modifier = Modifier.fillMaxSize()) {
         // Background
         if (bgBitmap != null) {
             Image(
                 bitmap = bgBitmap,
-                contentDescription = null,
+                contentDescription = "Main menu background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -198,6 +209,31 @@ fun HomeScreen(
                     )
                 }
             }
+        }
+
+        // Settings gear icon
+        IconButton(
+            onClick = { showParentalGate = true },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(8.dp)
+                .sizeIn(minWidth = 64.dp, minHeight = 64.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = "Settings - Parent Zone",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        if (showParentalGate) {
+            ParentalGate(
+                onPassed = {
+                    showParentalGate = false
+                    onNavigateToParentZone()
+                },
+                onDismissed = { showParentalGate = false }
+            )
         }
     }
 }
