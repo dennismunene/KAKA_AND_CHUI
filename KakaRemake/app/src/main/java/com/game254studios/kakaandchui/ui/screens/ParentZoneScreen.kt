@@ -1,5 +1,6 @@
 package com.game254studios.kakaandchui.ui.screens
 
+import android.app.Activity
 import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -37,13 +40,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.game254studios.kakaandchui.ads.AdManager
 import com.game254studios.kakaandchui.ui.theme.StarGold
 import com.game254studios.kakaandchui.viewmodel.ParentViewModel
 
 @Composable
 fun ParentZoneScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToPrivacyPolicy: () -> Unit = {}
+    onNavigateToPrivacyPolicy: () -> Unit = {},
+    onNavigateToSubscription: () -> Unit = {},
+    adManager: AdManager? = null,
+    isPremium: Boolean = false
 ) {
     val application = LocalContext.current.applicationContext as Application
     val viewModel: ParentViewModel = viewModel(factory = ParentViewModel.Factory(application))
@@ -188,7 +195,87 @@ fun ParentZoneScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Section 3: About
+            // Section 3: Subscription
+            Text(
+                text = "⭐ Premium",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    if (isPremium) {
+                        Text(
+                            text = "✅ You are a Premium subscriber!",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        Text(
+                            text = "Unlock all modules, remove ads, and get unlimited coins!",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            onClick = onNavigateToSubscription,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
+                        ) {
+                            Text("View Plans", color = Color.White)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Section 4: Rewarded Ad for Coins
+            if (!isPremium && adManager != null) {
+                Text(
+                    text = "🎁 Earn Coins",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(vertical = 12.dp)
+                )
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Text(
+                            text = "Watch a short video to earn coins for your child!",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        val context = LocalContext.current
+                        OutlinedButton(
+                            onClick = {
+                                (context as? Activity)?.let { activity ->
+                                    adManager.showRewarded(activity) { _ ->
+                                        // Reward handled by caller
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = adManager.isRewardedReady
+                        ) {
+                            Text(
+                                text = if (adManager.isRewardedReady) "Watch Ad for 50 Coins 🎬"
+                                else "No ads available right now"
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Section 5: About
             Text(
                 text = "\u2139\uFE0F About",
                 style = MaterialTheme.typography.titleMedium,

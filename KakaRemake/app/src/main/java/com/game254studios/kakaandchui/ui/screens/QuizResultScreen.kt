@@ -39,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
+import com.game254studios.kakaandchui.ads.AdManager
+import android.app.Activity
 import androidx.compose.foundation.layout.sizeIn
 import com.game254studios.kakaandchui.ui.components.StarRating
 import kotlinx.coroutines.delay
@@ -51,7 +53,9 @@ fun QuizResultScreen(
     xpEarned: Int,
     coinsEarned: Int,
     onPlayAgain: () -> Unit,
-    onBackToHome: () -> Unit
+    onBackToHome: () -> Unit,
+    adManager: AdManager? = null,
+    isPremium: Boolean = false
 ) {
     val context = LocalContext.current
     val audioPlayer = remember { AudioPlayer(context) }
@@ -66,13 +70,20 @@ fun QuizResultScreen(
 
     var showRewards by remember { mutableStateOf(false) }
 
-    // Play celebration audio
+    // Play celebration audio and show interstitial for free users
     LaunchedEffect(Unit) {
         if (percentage >= 0.6f) {
             audioPlayer.playAsset("mfx/clapping.mp3")
         }
         delay(600)
         showRewards = true
+
+        // Show interstitial ad for free tier users (after rewards appear)
+        if (!isPremium && adManager != null) {
+            (context as? Activity)?.let { activity ->
+                adManager.showInterstitialIfReady(activity)
+            }
+        }
     }
 
     Column(

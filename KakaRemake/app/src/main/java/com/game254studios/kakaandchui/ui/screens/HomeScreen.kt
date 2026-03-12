@@ -43,12 +43,14 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
+import com.game254studios.kakaandchui.ui.components.BannerAdView
 
 @Composable
 fun HomeScreen(
     onModuleClick: (Module) -> Unit,
     homeViewModel: HomeViewModel,
-    onNavigateToParentZone: () -> Unit = {}
+    onNavigateToParentZone: () -> Unit = {},
+    isPremium: Boolean = false
 ) {
     val context = LocalContext.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -235,5 +237,11 @@ fun HomeScreen(
                 onDismissed = { showParentalGate = false }
             )
         }
+
+        // Banner ad at bottom for free tier users
+        BannerAdView(
+            isPremium = isPremium,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }

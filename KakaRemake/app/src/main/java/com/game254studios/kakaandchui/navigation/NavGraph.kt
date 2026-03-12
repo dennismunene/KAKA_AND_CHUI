@@ -14,9 +14,14 @@ import com.game254studios.kakaandchui.ui.screens.ParentZoneScreen
 import com.game254studios.kakaandchui.ui.screens.QuizResultScreen
 import com.game254studios.kakaandchui.ui.screens.QuizScreen
 import com.game254studios.kakaandchui.ui.screens.PrivacyPolicyScreen
+import com.game254studios.kakaandchui.ui.screens.SubscriptionScreen
 import com.game254studios.kakaandchui.ui.screens.SplashScreen
+import com.game254studios.kakaandchui.ads.AdManager
+import com.game254studios.kakaandchui.billing.BillingManager
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 object Routes {
     const val SPLASH = "splash"
@@ -32,11 +37,17 @@ object Routes {
 
     const val PARENT_ZONE = "parent_zone"
     const val PRIVACY_POLICY = "privacy_policy"
+    const val SUBSCRIPTION = "subscription"
 }
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(
+    navController: NavHostController,
+    billingManager: BillingManager,
+    adManager: AdManager
+) {
     val homeViewModel: HomeViewModel = viewModel()
+    val isPremium by billingManager.isPremium.collectAsState()
 
     NavHost(navController = navController, startDestination = Routes.SPLASH) {
 
@@ -57,7 +68,8 @@ fun NavGraph(navController: NavHostController) {
                 homeViewModel = homeViewModel,
                 onNavigateToParentZone = {
                     navController.navigate(Routes.PARENT_ZONE)
-                }
+                },
+                isPremium = isPremium
             )
         }
 
@@ -105,12 +117,24 @@ fun NavGraph(navController: NavHostController) {
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToPrivacyPolicy = {
                     navController.navigate(Routes.PRIVACY_POLICY)
-                }
+                },
+                onNavigateToSubscription = {
+                    navController.navigate(Routes.SUBSCRIPTION)
+                },
+                adManager = adManager,
+                isPremium = isPremium
             )
         }
 
         composable(Routes.PRIVACY_POLICY) {
             PrivacyPolicyScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Routes.SUBSCRIPTION) {
+            SubscriptionScreen(
+                billingManager = billingManager,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(
@@ -144,7 +168,9 @@ fun NavGraph(navController: NavHostController) {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.HOME) { inclusive = true }
                     }
-                }
+                },
+                adManager = adManager,
+                isPremium = isPremium
             )
         }
     }

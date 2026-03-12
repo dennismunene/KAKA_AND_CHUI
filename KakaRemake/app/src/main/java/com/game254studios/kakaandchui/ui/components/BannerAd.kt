@@ -12,11 +12,11 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun BannerAdView(isPremium: Boolean) {
+fun BannerAdView(isPremium: Boolean, modifier: Modifier = Modifier) {
     if (isPremium) return // No ads for premium users
 
     AndroidView(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
         factory = { context ->
