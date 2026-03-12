@@ -187,7 +187,9 @@ class GameRepository(private val db: KakaDatabase, private val prefs: UserPrefer
             val earned = when (def.id) {
                 "first_steps" -> allProgress.any { it.timesPlayed > 0 }
                 "vowel_master" -> allProgress.any { it.moduleId == Module.VOKALI.name && it.quizStars >= 3 }
+                "word_wizard" -> allProgress.any { it.moduleId == Module.VOKALI_MANENO.name && it.quizStars >= 3 }
                 "number_ninja" -> allProgress.any { it.moduleId == Module.TARAKIMU.name && it.quizStars >= 3 }
+                "counting_champion" -> allProgress.any { it.moduleId == Module.TARAKIMU_11_20.name && it.quizStars >= 3 }
                 "shape_shifter" -> allProgress.any { it.moduleId == Module.MAUMBO.name && it.quizStars >= 3 }
                 "rainbow_warrior" -> allProgress.any { it.moduleId == Module.RANGI.name && it.quizStars >= 3 }
                 "week_warrior" -> (streak?.currentStreak ?: 0) >= 7

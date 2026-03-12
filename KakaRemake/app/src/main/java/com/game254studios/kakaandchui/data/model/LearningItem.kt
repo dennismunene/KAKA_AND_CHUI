@@ -5,5 +5,6 @@ data class LearningItem(
     val name: String,
     val imageAsset: String,
     val audioAsset: String,
-    val quizAudioAsset: String
+    val quizAudioAsset: String,
+    val description: String = ""
 )

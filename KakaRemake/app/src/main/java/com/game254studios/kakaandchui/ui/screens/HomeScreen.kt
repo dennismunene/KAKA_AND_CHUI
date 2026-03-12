@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -66,13 +69,15 @@ fun HomeScreen(
     val cardSize = when {
         screenWidthDp >= 840 -> 180.dp
         screenWidthDp >= 600 -> 200.dp
-        else -> 160.dp
+        else -> 140.dp
     }
 
     val xpInLevel = homeState.xp % 100
     val xpProgress = xpInLevel / 100f
 
     var showParentalGate by remember { mutableStateOf(false) }
+
+    val modules = Module.entries.toList()
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Background
@@ -87,8 +92,7 @@ fun HomeScreen(
 
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Kaka & Chui",
@@ -158,55 +162,23 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (screenWidthDp >= 840) {
-                // Expanded (10" tablets): 4×1 row layout
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Module.entries.forEach { module ->
-                        ModuleCard(
-                            module = module,
-                            onClick = { onModuleClick(module) },
-                            stars = homeState.moduleStars[module.name] ?: 0,
-                            cardSize = cardSize
-                        )
-                    }
-                }
-            } else {
-                // Compact & Medium: 2×2 grid
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+            // Module grid - adaptive columns based on screen width
+            val columns = when {
+                screenWidthDp >= 840 -> 3
+                else -> 2
+            }
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(columns),
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(modules) { module ->
                     ModuleCard(
-                        module = Module.VOKALI,
-                        onClick = { onModuleClick(Module.VOKALI) },
-                        stars = homeState.moduleStars[Module.VOKALI.name] ?: 0,
-                        cardSize = cardSize
-                    )
-                    ModuleCard(
-                        module = Module.TARAKIMU,
-                        onClick = { onModuleClick(Module.TARAKIMU) },
-                        stars = homeState.moduleStars[Module.TARAKIMU.name] ?: 0,
-                        cardSize = cardSize
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ModuleCard(
-                        module = Module.MAUMBO,
-                        onClick = { onModuleClick(Module.MAUMBO) },
-                        stars = homeState.moduleStars[Module.MAUMBO.name] ?: 0,
-                        cardSize = cardSize
-                    )
-                    ModuleCard(
-                        module = Module.RANGI,
-                        onClick = { onModuleClick(Module.RANGI) },
-                        stars = homeState.moduleStars[Module.RANGI.name] ?: 0,
+                        module = module,
+                        onClick = { onModuleClick(module) },
+                        stars = homeState.moduleStars[module.name] ?: 0,
                         cardSize = cardSize
                     )
                 }

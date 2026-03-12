@@ -79,6 +79,15 @@ fun FlashCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = 16.dp)
             )
+            if (item.description.isNotEmpty()) {
+                Text(
+                    text = item.description,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
     }
 }
