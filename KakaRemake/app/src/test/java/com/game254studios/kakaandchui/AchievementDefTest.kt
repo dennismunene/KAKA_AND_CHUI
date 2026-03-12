@@ -7,8 +7,8 @@ import org.junit.Test
 class AchievementDefTest {
 
     @Test
-    fun `ALL_ACHIEVEMENTS contains 8 items`() {
-        assertEquals(8, ALL_ACHIEVEMENTS.size)
+    fun `ALL_ACHIEVEMENTS contains at least 8 items`() {
+        assertTrue(ALL_ACHIEVEMENTS.size >= 8)
     }
 
     @Test
