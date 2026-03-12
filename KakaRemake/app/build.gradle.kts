@@ -74,6 +74,12 @@ dependencies {
     // Lottie
     implementation("com.airbnb.android:lottie-compose:6.6.2")
 
+    // Google Play Billing
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
+
+    // AdMob
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

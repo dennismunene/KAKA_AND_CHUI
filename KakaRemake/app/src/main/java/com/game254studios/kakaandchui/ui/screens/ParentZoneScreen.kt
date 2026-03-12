@@ -42,7 +42,8 @@ import com.game254studios.kakaandchui.viewmodel.ParentViewModel
 
 @Composable
 fun ParentZoneScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToPrivacyPolicy: () -> Unit = {}
 ) {
     val application = LocalContext.current.applicationContext as Application
     val viewModel: ParentViewModel = viewModel(factory = ParentViewModel.Factory(application))
@@ -205,7 +206,7 @@ fun ParentZoneScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedButton(
-                        onClick = { /* Placeholder */ },
+                        onClick = onNavigateToPrivacyPolicy,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Privacy Policy")

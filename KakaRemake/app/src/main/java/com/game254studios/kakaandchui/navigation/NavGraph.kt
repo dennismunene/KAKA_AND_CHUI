@@ -13,6 +13,7 @@ import com.game254studios.kakaandchui.ui.screens.LearnScreen
 import com.game254studios.kakaandchui.ui.screens.ParentZoneScreen
 import com.game254studios.kakaandchui.ui.screens.QuizResultScreen
 import com.game254studios.kakaandchui.ui.screens.QuizScreen
+import com.game254studios.kakaandchui.ui.screens.PrivacyPolicyScreen
 import com.game254studios.kakaandchui.ui.screens.SplashScreen
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
@@ -30,6 +31,7 @@ object Routes {
         "quiz_result/${module.name}/$score/$total/$xpEarned/$coinsEarned"
 
     const val PARENT_ZONE = "parent_zone"
+    const val PRIVACY_POLICY = "privacy_policy"
 }
 
 @Composable
@@ -99,7 +101,16 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Routes.PARENT_ZONE) {
-            ParentZoneScreen(onNavigateBack = { navController.popBackStack() })
+            ParentZoneScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToPrivacyPolicy = {
+                    navController.navigate(Routes.PRIVACY_POLICY)
+                }
+            )
+        }
+
+        composable(Routes.PRIVACY_POLICY) {
+            PrivacyPolicyScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(
