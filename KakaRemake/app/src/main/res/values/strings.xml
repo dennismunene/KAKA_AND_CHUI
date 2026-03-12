@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KakaRemake</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="welcome">Hi there ,\nThank you for Downloading Kaka and Chui v1.0\n\nYou now have access to try it out for limited period.Go Premium and get full access for only <ul>Ksh 250/yr</ul>\n\n <strong>Available payment methods</strong>\n &#9702; Mpesa \n &#9702; Credit Card(Visa/Mastercard) \n &#9702; PayPal \n</string>
+
+    <string name="locked">This feature is available for premium users only.\n\nBecome a premium user for only 250ksh/yr.\n\n<strong>Accepted payment methods</strong>\n &#9702; Mpesa \n &#9702; Credit Card(Visa/Mastercard) \n &#9702; PayPal</string>
+    
+    <string name="mpesa"><b><ul>How to Pay</ul></b> \n\n 1.Go to Mpesa Menu \n 2.Select Lipa na M-PESA \n 3.Buy Goods and Services \n 4. Enter till number XXXXXX \n 5.Enter Amount Ksh.250 \n 6.Enter Your M-Pesa Pin and complete the transaction\n\n Once the Confirmation message is received , you will have full access to the app.</string>
+        
+</resources>
