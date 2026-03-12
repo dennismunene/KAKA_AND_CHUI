@@ -1,6 +1,12 @@
 package com.game254studios.kakaandchui.ui.screens
 
 import android.graphics.BitmapFactory
+import androidx.compose.animation.core.EaseInOutSine
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +16,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,6 +53,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import com.game254studios.kakaandchui.util.ImageLoader
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
 import com.game254studios.kakaandchui.ui.components.BannerAdView
 
@@ -64,6 +73,18 @@ fun HomeScreen(
             BitmapFactory.decodeStream(stream)?.asImageBitmap()
         } catch (_: Exception) { null }
     }
+    val characterBitmap = remember { ImageLoader.load(context, "gfx/happyanim.png") }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "idle_bounce")
+    val bounceOffset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 10f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = EaseInOutSine),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "idle_bounce"
+    )
 
     // Responsive card size
     val cardSize = when {
@@ -94,11 +115,27 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Kaka & Chui",
-                style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if (characterBitmap != null) {
+                    Image(
+                        bitmap = characterBitmap,
+                        contentDescription = "Kaka character",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .offset(y = bounceOffset.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(
+                    text = "Kaka & Chui",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             // Gamification stats bar

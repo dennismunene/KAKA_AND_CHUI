@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.game254studios.kakaandchui.ads.AdManager
 import com.game254studios.kakaandchui.analytics.AnalyticsManager
+import com.game254studios.kakaandchui.audio.BackgroundMusicPlayer
 import com.game254studios.kakaandchui.billing.BillingManager
 import com.game254studios.kakaandchui.config.RemoteConfigManager
 import com.game254studios.kakaandchui.ui.theme.KakaTheme
@@ -36,6 +37,8 @@ class MainActivity : ComponentActivity() {
         adManager.loadInterstitial()
         adManager.loadRewarded()
 
+        BackgroundMusicPlayer.start(this)
+
         enableEdgeToEdge()
         setContent {
             KakaTheme {
@@ -47,8 +50,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        BackgroundMusicPlayer.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BackgroundMusicPlayer.resume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        BackgroundMusicPlayer.stop()
         billingManager.endConnection()
     }
 }
