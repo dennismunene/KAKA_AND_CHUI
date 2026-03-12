@@ -38,6 +38,7 @@ import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.AnswerState
 import com.game254studios.kakaandchui.ui.components.ConfettiOverlay
 import com.game254studios.kakaandchui.ui.components.QuizAnswerButton
+import com.game254studios.kakaandchui.ui.components.SpriteAnimation
 import com.game254studios.kakaandchui.util.ImageLoader
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
 import androidx.compose.foundation.layout.sizeIn
@@ -280,6 +281,17 @@ fun QuizScreen(
         // Confetti celebration on correct answer
         ConfettiOverlay(
             isVisible = state.answered && state.selectedAnswer == state.correctAnswer
+        )
+
+        // Cave monster watching from bottom-right corner
+        SpriteAnimation(
+            assetPath = "gfx/cavemonster_huh_strip.png",
+            columns = 5, rows = 1, frameCount = 5,
+            frameDurationMs = 200L,
+            size = 48.dp,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(8.dp)
         )
     }
 }

@@ -1,13 +1,11 @@
 package com.game254studios.kakaandchui.ui.screens
 
-import android.graphics.BitmapFactory
 import androidx.compose.animation.core.EaseInOutSine
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -39,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.ModuleCard
 import com.game254studios.kakaandchui.ui.components.ParentalGate
+import com.game254studios.kakaandchui.ui.components.SpriteAnimation
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -65,32 +61,36 @@ fun HomeScreen(
     isPremium: Boolean = false
 ) {
     val context = LocalContext.current
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val config = LocalConfiguration.current
+    val screenWidthDp = config.screenWidthDp
+    val screenHeightDp = config.screenHeightDp
+    val isLandscape = screenWidthDp > screenHeightDp
     val homeState by homeViewModel.state.collectAsState()
-    val bgBitmap = remember {
-        try {
-            val stream = context.assets.open("gfx/mainmenu/menubg.png")
-            BitmapFactory.decodeStream(stream)?.asImageBitmap()
-        } catch (_: Exception) { null }
-    }
+
     val characterBitmap = remember { ImageLoader.load(context, "gfx/happyanim.png") }
+
+    // Title row with animated character
+    // happyanim.png is a 3-column × 4-row sprite sheet (12 frames)
+    val hasHappyAnim = remember {
+        try { context.assets.open("gfx/happyanim.png").close(); true }
+        catch (_: Exception) { false }
+    }
 
     val infiniteTransition = rememberInfiniteTransition(label = "idle_bounce")
     val bounceOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 10f,
+        targetValue = 8f,
         animationSpec = infiniteRepeatable(
-            animation = tween(800, easing = EaseInOutSine),
+            animation = tween(700, easing = EaseInOutSine),
             repeatMode = RepeatMode.Reverse
         ),
         label = "idle_bounce"
     )
 
-    // Responsive card size
     val cardSize = when {
-        screenWidthDp >= 840 -> 180.dp
-        screenWidthDp >= 600 -> 200.dp
-        else -> 140.dp
+        screenWidthDp >= 840 -> 160.dp
+        screenWidthDp >= 600 -> 150.dp
+        else -> 120.dp
     }
 
     val xpInLevel = homeState.xp % 100
@@ -101,60 +101,53 @@ fun HomeScreen(
     val modules = Module.entries.toList()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background
-        if (bgBitmap != null) {
-            Image(
-                bitmap = bgBitmap,
-                contentDescription = "Main menu background",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 56.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Title row with character
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (characterBitmap != null) {
-                    Image(
-                        bitmap = characterBitmap,
-                        contentDescription = "Kaka character",
-                        modifier = Modifier
-                            .size(60.dp)
-                            .offset(y = bounceOffset.dp),
-                        contentScale = ContentScale.Fit
+                if (hasHappyAnim) {
+                    SpriteAnimation(
+                        assetPath = "gfx/happyanim.png",
+                        columns = 3, rows = 4, frameCount = 12,
+                        frameDurationMs = 120L,
+                        size = 52.dp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
                 Text(
                     text = "Kaka & Chui",
-                    style = MaterialTheme.typography.displayLarge,
+                    style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
 
-            // Gamification stats bar
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Compact stats bar
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White.copy(alpha = 0.85f)
                 )
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    // Level + XP bar
+                Column(modifier = Modifier.padding(10.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "Lv.${homeState.level} ${homeState.levelName}",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -163,33 +156,32 @@ fun HomeScreen(
                             progress = { xpProgress },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)),
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(3.dp)),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "${homeState.xp} XP",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    // Coins + Streak
+                    Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Text(
                             text = "🪙 ${homeState.coins}",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFFB300)
                         )
                         Text(
                             text = "🔥 ${homeState.streak} days",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFF5722)
                         )
@@ -197,19 +189,21 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Module grid - adaptive columns based on screen width
+            // Module grid
             val columns = when {
-                screenWidthDp >= 840 -> 3
+                isLandscape && screenWidthDp >= 840 -> 4
+                isLandscape -> 3
+                screenWidthDp >= 600 -> 3
                 else -> 2
             }
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(columns),
                 modifier = Modifier.fillMaxWidth().weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(modules) { module ->
                     ModuleCard(
@@ -227,8 +221,8 @@ fun HomeScreen(
             onClick = { showParentalGate = true },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(8.dp)
-                .sizeIn(minWidth = 64.dp, minHeight = 64.dp)
+                .padding(4.dp)
+                .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.Settings,
@@ -247,7 +241,7 @@ fun HomeScreen(
             )
         }
 
-        // Banner ad at bottom for free tier users
+        // Banner ad at bottom
         BannerAdView(
             isPremium = isPremium,
             modifier = Modifier.align(Alignment.BottomCenter)

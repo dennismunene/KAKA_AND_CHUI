@@ -1,28 +1,17 @@
 package com.game254studios.kakaandchui.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseInOutSine
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -53,7 +42,7 @@ import com.game254studios.kakaandchui.ads.AdManager
 import android.app.Activity
 import androidx.compose.foundation.layout.sizeIn
 import com.game254studios.kakaandchui.ui.components.StarRating
-import com.game254studios.kakaandchui.util.ImageLoader
+import com.game254studios.kakaandchui.ui.components.SpriteAnimation
 import kotlinx.coroutines.delay
 
 @Composable
@@ -74,23 +63,8 @@ fun QuizResultScreen(
     val percentage = if (total > 0) score.toFloat() / total else 0f
     val isHappy = percentage >= 0.6f
 
-    val characterBitmap = remember {
-        ImageLoader.load(
-            context,
-            if (isHappy) "gfx/happyanim_big.png" else "gfx/sadanim_big.png"
-        )
-    }
-
-    val infiniteTransition = rememberInfiniteTransition(label = "character_anim")
-    val animOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = if (isHappy) 10f else 6f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(if (isHappy) 800 else 1200, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "character_anim"
-    )
+    // happyanim.png: 3 cols × 4 rows = 12 frames
+    // sadanim.png: 4 cols × 5 rows = 20 frames
     val stars = when {
         percentage >= 0.9f -> 3
         percentage >= 0.6f -> 2
@@ -125,15 +99,20 @@ fun QuizResultScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Animated character
-        if (characterBitmap != null) {
-            Image(
-                bitmap = characterBitmap,
-                contentDescription = if (isHappy) "Happy character" else "Sad character",
-                modifier = Modifier
-                    .size(150.dp)
-                    .offset(y = animOffset.dp),
-                contentScale = ContentScale.Fit
+        // Animated character sprite
+        if (isHappy) {
+            SpriteAnimation(
+                assetPath = "gfx/happyanim.png",
+                columns = 3, rows = 4, frameCount = 12,
+                frameDurationMs = 100L,
+                size = 130.dp
+            )
+        } else {
+            SpriteAnimation(
+                assetPath = "gfx/sadanim.png",
+                columns = 4, rows = 5, frameCount = 20,
+                frameDurationMs = 100L,
+                size = 130.dp
             )
         }
 
