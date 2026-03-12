@@ -1,6 +1,5 @@
 package com.game254studios.kakaandchui.ui.screens
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +38,7 @@ import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.AnswerState
 import com.game254studios.kakaandchui.ui.components.ConfettiOverlay
 import com.game254studios.kakaandchui.ui.components.QuizAnswerButton
+import com.game254studios.kakaandchui.util.ImageLoader
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -152,10 +151,7 @@ fun QuizScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     val bitmap = remember(currentItem.imageAsset) {
-                        try {
-                            val stream = context.assets.open(currentItem.imageAsset)
-                            BitmapFactory.decodeStream(stream)?.asImageBitmap()
-                        } catch (_: Exception) { null }
+                        ImageLoader.load(context, currentItem.imageAsset)
                     }
                     if (bitmap != null) {
                         Image(
@@ -177,10 +173,7 @@ fun QuizScreen(
                         val feedbackBitmap = remember(state.selectedAnswer) {
                             val path = if (state.selectedAnswer == state.correctAnswer)
                                 "gfx/green_tick.png" else "gfx/red_x.png"
-                            try {
-                                val stream = context.assets.open(path)
-                                BitmapFactory.decodeStream(stream)?.asImageBitmap()
-                            } catch (_: Exception) { null }
+                            ImageLoader.load(context, path)
                         }
                         if (feedbackBitmap != null) {
                             Image(

@@ -1,6 +1,5 @@
 package com.game254studios.kakaandchui.ui.screens
 
-import android.graphics.BitmapFactory
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -19,10 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.game254studios.kakaandchui.util.ImageLoader
 import kotlinx.coroutines.delay
 
 @Composable
@@ -36,10 +35,7 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
 
     val context = LocalContext.current
     val logoBitmap = remember {
-        try {
-            val stream = context.assets.open("gfx/splash.png")
-            BitmapFactory.decodeStream(stream)?.asImageBitmap()
-        } catch (_: Exception) { null }
+        ImageLoader.load(context, "gfx/splash.png")
     }
 
     LaunchedEffect(Unit) {

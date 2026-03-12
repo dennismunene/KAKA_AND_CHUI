@@ -1,36 +1,59 @@
-# ProGuard rules for Kaka and Chui
-# Based on original proguard-project.txt
+# ProGuard / R8 rules for Kaka and Chui
+
+# ── Global optimizations ──
+-allowaccessmodification
+-repackageclasses
 
 # Keep application classes
 -keep class com.game254studios.** { *; }
 
-# AndroidX
+# ── AndroidX ──
 -keep class androidx.** { *; }
 -dontwarn androidx.**
 
-# Jetpack Compose
+# ── Jetpack Compose ──
 -keep class androidx.compose.** { *; }
 -dontwarn androidx.compose.**
+# Allow R8 to optimize Compose runtime internals
+-dontwarn androidx.compose.runtime.**
 
-# Kotlin
+# ── Kotlin ──
 -keep class kotlin.** { *; }
 -dontwarn kotlin.**
 -keepclassmembers class **$WhenMappings {
     <fields>;
 }
 
-# Lottie
+# ── Room (entities, DAOs, generated code) ──
+-keep class * extends androidx.room.RoomDatabase { *; }
+-keep @androidx.room.Entity class * { *; }
+-keep @androidx.room.Dao class * { *; }
+-keepclassmembers class * {
+    @androidx.room.* <methods>;
+}
+-dontwarn androidx.room.**
+
+# ── Firebase ──
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+-keep class com.google.android.gms.internal.firebase-perf.** { *; }
+-dontwarn com.google.android.gms.internal.**
+
+# ── AdMob (Google Mobile Ads) ──
+-keep class com.google.android.gms.ads.** { *; }
+-dontwarn com.google.android.gms.ads.**
+
+# ── Google Play Billing ──
+-keep class com.android.vending.billing.** { *; }
+-keep class com.android.billingclient.** { *; }
+-dontwarn com.android.billingclient.**
+
+# ── Lottie ──
 -dontwarn com.airbnb.lottie.**
 -keep class com.airbnb.lottie.** { *; }
 
 # Keep custom font references
 -keep class * extends android.graphics.Typeface
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
 
 # Remove logging in release builds
 -assumenosideeffects class android.util.Log {

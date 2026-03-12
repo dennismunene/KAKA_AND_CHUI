@@ -1,6 +1,5 @@
 package com.game254studios.kakaandchui.ui.components
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,12 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.game254studios.kakaandchui.data.model.LearningItem
+import com.game254studios.kakaandchui.util.ImageLoader
 
 @Composable
 fun FlashCard(
@@ -33,10 +32,7 @@ fun FlashCard(
 ) {
     val context = LocalContext.current
     val bitmap = remember(item.imageAsset) {
-        try {
-            val stream = context.assets.open(item.imageAsset)
-            BitmapFactory.decodeStream(stream)?.asImageBitmap()
-        } catch (_: Exception) { null }
+        ImageLoader.load(context, item.imageAsset)
     }
 
     Card(
