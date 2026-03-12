@@ -10,16 +10,20 @@ import androidx.navigation.navArgument
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.screens.HomeScreen
 import com.game254studios.kakaandchui.ui.screens.LearnScreen
+import com.game254studios.kakaandchui.ui.screens.MemoryMatchScreen
 import com.game254studios.kakaandchui.ui.screens.ParentZoneScreen
 import com.game254studios.kakaandchui.ui.screens.QuizResultScreen
 import com.game254studios.kakaandchui.ui.screens.QuizScreen
 import com.game254studios.kakaandchui.ui.screens.PrivacyPolicyScreen
+import com.game254studios.kakaandchui.ui.screens.SoundMatchScreen
 import com.game254studios.kakaandchui.ui.screens.SubscriptionScreen
 import com.game254studios.kakaandchui.ui.screens.SplashScreen
 import com.game254studios.kakaandchui.ads.AdManager
 import com.game254studios.kakaandchui.billing.BillingManager
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
+import com.game254studios.kakaandchui.viewmodel.MemoryMatchViewModel
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
+import com.game254studios.kakaandchui.viewmodel.SoundMatchViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
@@ -30,8 +34,13 @@ object Routes {
     const val QUIZ = "quiz/{moduleId}"
     const val QUIZ_RESULT = "quiz_result/{moduleId}/{score}/{total}/{xpEarned}/{coinsEarned}"
 
+    const val MEMORY_MATCH = "memory_match/{moduleId}"
+    const val SOUND_MATCH = "sound_match/{moduleId}"
+
     fun learn(module: Module) = "learn/${module.name}"
     fun quiz(module: Module) = "quiz/${module.name}"
+    fun memoryMatch(module: Module) = "memory_match/${module.name}"
+    fun soundMatch(module: Module) = "sound_match/${module.name}"
     fun quizResult(module: Module, score: Int, total: Int, xpEarned: Int, coinsEarned: Int) =
         "quiz_result/${module.name}/$score/$total/$xpEarned/$coinsEarned"
 
@@ -86,6 +95,12 @@ fun NavGraph(
                     navController.navigate(Routes.quiz(module)) {
                         popUpTo(Routes.learn(module)) { inclusive = true }
                     }
+                },
+                onStartMemoryMatch = {
+                    navController.navigate(Routes.memoryMatch(module))
+                },
+                onStartSoundMatch = {
+                    navController.navigate(Routes.soundMatch(module))
                 }
             )
         }
@@ -109,6 +124,37 @@ fun NavGraph(
                     }
                 },
                 quizViewModel = quizViewModel
+            )
+        }
+
+        composable(
+            route = Routes.MEMORY_MATCH,
+            arguments = listOf(navArgument("moduleId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val moduleId = backStackEntry.arguments?.getString("moduleId") ?: return@composable
+            val module = Module.valueOf(moduleId)
+            MemoryMatchScreen(
+                module = module,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Routes.SOUND_MATCH,
+            arguments = listOf(navArgument("moduleId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val moduleId = backStackEntry.arguments?.getString("moduleId") ?: return@composable
+            val module = Module.valueOf(moduleId)
+            SoundMatchScreen(
+                module = module,
+                onBack = { navController.popBackStack() },
+                onGameFinished = { score, total, xpEarned, coinsEarned ->
+                    navController.navigate(
+                        Routes.quizResult(module, score, total, xpEarned, coinsEarned)
+                    ) {
+                        popUpTo(Routes.HOME)
+                    }
+                }
             )
         }
 

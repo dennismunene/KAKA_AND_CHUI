@@ -53,6 +53,8 @@ fun LearnScreen(
     module: Module,
     onBack: () -> Unit,
     onStartQuiz: () -> Unit,
+    onStartMemoryMatch: () -> Unit = {},
+    onStartSoundMatch: () -> Unit = {},
     learnViewModel: LearnViewModel = viewModel()
 ) {
     val items by learnViewModel.items.collectAsState()
@@ -205,6 +207,52 @@ fun LearnScreen(
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White
                 )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = {
+                        audioPlayer.stop()
+                        onStartMemoryMatch()
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary
+                    )
+                ) {
+                    Text(
+                        text = "Kumbuka 🃏",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                }
+                Button(
+                    onClick = {
+                        audioPlayer.stop()
+                        onStartSoundMatch()
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = "Sikia 🔊",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                }
             }
         }
 
