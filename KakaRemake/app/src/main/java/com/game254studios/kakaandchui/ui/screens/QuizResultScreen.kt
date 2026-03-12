@@ -70,20 +70,13 @@ fun QuizResultScreen(
 
     var showRewards by remember { mutableStateOf(false) }
 
-    // Play celebration audio and show interstitial for free users
+    // Play celebration audio
     LaunchedEffect(Unit) {
         if (percentage >= 0.6f) {
             audioPlayer.playAsset("mfx/clapping.mp3")
         }
         delay(600)
         showRewards = true
-
-        // Show interstitial ad for free tier users (after rewards appear)
-        if (!isPremium && adManager != null) {
-            (context as? Activity)?.let { activity ->
-                adManager.showInterstitialIfReady(activity)
-            }
-        }
     }
 
     Column(
@@ -211,6 +204,12 @@ fun QuizResultScreen(
         OutlinedButton(
             onClick = {
                 audioPlayer.stop()
+                // Show interstitial ad for free tier during navigation transition
+                if (!isPremium && adManager != null) {
+                    (context as? Activity)?.let { activity ->
+                        adManager.showInterstitialIfReady(activity)
+                    }
+                }
                 onBackToHome()
             },
             modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 64.dp),

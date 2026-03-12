@@ -34,6 +34,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game254studios.kakaandchui.ads.AdManager
+import com.game254studios.kakaandchui.ui.components.ParentalGate
 import com.game254studios.kakaandchui.ui.theme.StarGold
 import com.game254studios.kakaandchui.viewmodel.ParentViewModel
 
@@ -53,8 +57,12 @@ fun ParentZoneScreen(
     isPremium: Boolean = false
 ) {
     val application = LocalContext.current.applicationContext as Application
+    val context = LocalContext.current
     val viewModel: ParentViewModel = viewModel(factory = ParentViewModel.Factory(application))
     val state by viewModel.state.collectAsState()
+
+    var showSubscriptionGate by remember { mutableStateOf(false) }
+    var showRewardedGate by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -220,7 +228,7 @@ fun ParentZoneScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(
-                            onClick = onNavigateToSubscription,
+                            onClick = { showSubscriptionGate = true },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
@@ -252,15 +260,8 @@ fun ParentZoneScreen(
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        val context = LocalContext.current
                         OutlinedButton(
-                            onClick = {
-                                (context as? Activity)?.let { activity ->
-                                    adManager.showRewarded(activity) { _ ->
-                                        // Reward handled by caller
-                                    }
-                                }
-                            },
+                            onClick = { showRewardedGate = true },
                             modifier = Modifier.fillMaxWidth(),
                             enabled = adManager.isRewardedReady
                         ) {
@@ -310,5 +311,29 @@ fun ParentZoneScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
         }
+    }
+
+    // Parental gate for subscription
+    if (showSubscriptionGate) {
+        ParentalGate(
+            onPassed = {
+                showSubscriptionGate = false
+                onNavigateToSubscription()
+            },
+            onDismissed = { showSubscriptionGate = false }
+        )
+    }
+
+    // Parental gate for rewarded ad
+    if (showRewardedGate) {
+        ParentalGate(
+            onPassed = {
+                showRewardedGate = false
+                (context as? Activity)?.let { activity ->
+                    adManager?.showRewarded(activity) { _ -> }
+                }
+            },
+            onDismissed = { showRewardedGate = false }
+        )
     }
 }

@@ -16,6 +16,9 @@ class AdManager(private val context: Context) {
         const val INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712"
         const val REWARDED_ID = "ca-app-pub-3940256099942544/5224354917"
         const val INTERSTITIAL_COOLDOWN_MS = 5 * 60 * 1000L // 5 minutes
+
+        /** Builds an AdRequest inheriting COPPA child-directed global config */
+        fun buildChildDirectedAdRequest(): AdRequest = AdRequest.Builder().build()
     }
 
     private var interstitialAd: InterstitialAd? = null
