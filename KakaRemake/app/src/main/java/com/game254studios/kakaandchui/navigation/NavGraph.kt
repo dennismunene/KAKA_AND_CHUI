@@ -1,6 +1,8 @@
 package com.game254studios.kakaandchui.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -57,6 +59,15 @@ fun NavGraph(
 ) {
     val homeViewModel: HomeViewModel = viewModel()
     val isPremium by billingManager.isPremium.collectAsState()
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    // Show an interstitial if the user is on the free tier and cooldown has elapsed
+    fun tryShowInterstitial() {
+        if (!isPremium && activity != null) {
+            adManager.showInterstitialIfReady(activity)
+        }
+    }
 
     NavHost(navController = navController, startDestination = Routes.SPLASH) {
 
@@ -90,7 +101,11 @@ fun NavGraph(
             val module = Module.valueOf(moduleId)
             LearnScreen(
                 module = module,
-                onBack = { navController.popBackStack() },
+                onBack = {
+                    // Interstitial on leaving a learning session
+                    tryShowInterstitial()
+                    navController.popBackStack()
+                },
                 onStartQuiz = {
                     navController.navigate(Routes.quiz(module)) {
                         popUpTo(Routes.learn(module)) { inclusive = true }
@@ -117,6 +132,8 @@ fun NavGraph(
                 module = module,
                 onBack = { navController.popBackStack() },
                 onQuizFinished = { score, total, xpEarned, coinsEarned ->
+                    // Interstitial between quiz and results screen
+                    tryShowInterstitial()
                     navController.navigate(
                         Routes.quizResult(module, score, total, xpEarned, coinsEarned)
                     ) {
@@ -135,7 +152,11 @@ fun NavGraph(
             val module = Module.valueOf(moduleId)
             MemoryMatchScreen(
                 module = module,
-                onBack = { navController.popBackStack() }
+                onBack = {
+                    // Interstitial on leaving memory match
+                    tryShowInterstitial()
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -147,8 +168,14 @@ fun NavGraph(
             val module = Module.valueOf(moduleId)
             SoundMatchScreen(
                 module = module,
-                onBack = { navController.popBackStack() },
+                onBack = {
+                    // Interstitial on leaving sound match
+                    tryShowInterstitial()
+                    navController.popBackStack()
+                },
                 onGameFinished = { score, total, xpEarned, coinsEarned ->
+                    // Interstitial between game and results screen
+                    tryShowInterstitial()
                     navController.navigate(
                         Routes.quizResult(module, score, total, xpEarned, coinsEarned)
                     ) {
