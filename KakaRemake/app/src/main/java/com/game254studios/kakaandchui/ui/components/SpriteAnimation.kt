@@ -3,7 +3,9 @@ package com.game254studios.kakaandchui.ui.components
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +28,7 @@ import kotlinx.coroutines.delay
  * @param rows Number of rows in the sheet
  * @param frameCount Total frames to animate (may be less than columns*rows)
  * @param frameDurationMs Milliseconds per frame
- * @param size Display size of the animation
+ * @param size Display size (square) of the animation
  */
 @Composable
 fun SpriteAnimation(
@@ -36,6 +38,32 @@ fun SpriteAnimation(
     frameCount: Int = columns * rows,
     frameDurationMs: Long = 120L,
     size: Dp,
+    modifier: Modifier = Modifier
+) {
+    SpriteAnimation(
+        assetPath = assetPath,
+        columns = columns,
+        rows = rows,
+        frameCount = frameCount,
+        frameDurationMs = frameDurationMs,
+        spriteWidth = size,
+        spriteHeight = size,
+        modifier = modifier
+    )
+}
+
+/**
+ * Animates a sprite strip/sheet with independent width and height.
+ */
+@Composable
+fun SpriteAnimation(
+    assetPath: String,
+    columns: Int,
+    rows: Int,
+    frameCount: Int = columns * rows,
+    frameDurationMs: Long = 120L,
+    spriteWidth: Dp,
+    spriteHeight: Dp,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -72,7 +100,7 @@ fun SpriteAnimation(
             ).asImageBitmap()
         }
 
-        Canvas(modifier = modifier.size(size)) {
+        Canvas(modifier = modifier.width(spriteWidth).height(spriteHeight)) {
             drawImage(
                 image = frameBitmap,
                 srcOffset = IntOffset.Zero,

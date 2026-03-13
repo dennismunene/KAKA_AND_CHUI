@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.ModuleCard
 import com.game254studios.kakaandchui.ui.components.ParentalGate
 import com.game254studios.kakaandchui.ui.components.SpriteAnimation
+import com.game254studios.kakaandchui.ui.components.FlyingBee
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -67,19 +69,13 @@ fun HomeScreen(
     val isLandscape = screenWidthDp > screenHeightDp
     val homeState by homeViewModel.state.collectAsState()
 
-    val characterBitmap = remember { ImageLoader.load(context, "gfx/happyanim.png") }
-
-    // Title row with animated character
-    // happyanim.png is a 3-column × 4-row sprite sheet (12 frames)
-    val hasHappyAnim = remember {
-        try { context.assets.open("gfx/happyanim.png").close(); true }
-        catch (_: Exception) { false }
-    }
+    val menuBgBitmap = remember { ImageLoader.load(context, "gfx/mainmenu/menubg.png") }
+    val titleBitmap = remember { ImageLoader.load(context, "gfx/mainmenu/ubaotitle.png") }
 
     val infiniteTransition = rememberInfiniteTransition(label = "idle_bounce")
     val bounceOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 8f,
+        targetValue = 6f,
         animationSpec = infiniteRepeatable(
             animation = tween(700, easing = EaseInOutSine),
             repeatMode = RepeatMode.Reverse
@@ -100,44 +96,92 @@ fun HomeScreen(
 
     val modules = Module.entries.toList()
 
+    // Banner ad height for bottom padding
+    val bannerHeight = if (isPremium) 0.dp else 52.dp
+
     Box(modifier = Modifier.fillMaxSize()) {
+
+        // Animated background — tiled menubg
+        if (menuBgBitmap != null) {
+            Image(
+                bitmap = menuBgBitmap,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                alpha = 0.35f
+            )
+        }
+
+        // Flying bee across the screen
+        FlyingBee()
+
+        // Kaka & Chui waving at bottom-left
+        SpriteAnimation(
+            assetPath = "gfx/mainmenu/kakanchuiwave.png",
+            columns = 4, rows = 5, frameCount = 20,
+            frameDurationMs = 150L,
+            spriteWidth = 100.dp,
+            spriteHeight = 100.dp,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 4.dp, bottom = bannerHeight + 4.dp)
+        )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 56.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = bannerHeight),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Title row with character
+            // Header: Ubao title image + mascot animation
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (hasHappyAnim) {
-                    SpriteAnimation(
-                        assetPath = "gfx/happyanim.png",
-                        columns = 3, rows = 4, frameCount = 12,
-                        frameDurationMs = 120L,
-                        size = 52.dp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-                Text(
-                    text = "Kaka & Chui",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.primary
+                // Ubao mascot waving (spritesheet.png — 4×3 = 12 frames)
+                SpriteAnimation(
+                    assetPath = "gfx/mainmenu/spritesheet.png",
+                    columns = 4, rows = 3, frameCount = 12,
+                    frameDurationMs = 120L,
+                    size = 64.dp,
+                    modifier = Modifier.padding(end = 4.dp)
                 )
+
+                if (titleBitmap != null) {
+                    Image(
+                        bitmap = titleBitmap,
+                        contentDescription = "Ubao",
+                        modifier = Modifier.height(32.dp).weight(1f, fill = false),
+                        contentScale = ContentScale.FillHeight
+                    )
+                } else {
+                    Text(
+                        text = "Kaka & Chui",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Wave animation strip below header
+            SpriteAnimation(
+                assetPath = "gfx/mainmenu/waveanim.png",
+                columns = 8, rows = 1, frameCount = 8,
+                frameDurationMs = 140L,
+                spriteWidth = 48.dp,
+                spriteHeight = 40.dp,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Compact stats bar
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.85f)
+                    containerColor = Color.White.copy(alpha = 0.88f)
                 )
             ) {
                 Column(modifier = Modifier.padding(10.dp)) {
@@ -174,13 +218,13 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Text(
-                            text = "🪙 ${homeState.coins}",
+                            text = "\uD83E\uDE99 ${homeState.coins}",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFFB300)
                         )
                         Text(
-                            text = "🔥 ${homeState.streak} days",
+                            text = "\uD83D\uDD25 ${homeState.streak} days",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFF5722)
@@ -189,7 +233,7 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Module grid
             val columns = when {
@@ -241,10 +285,12 @@ fun HomeScreen(
             )
         }
 
-        // Banner ad at bottom
+        // Banner ad at bottom — properly positioned with no clipping
         BannerAdView(
             isPremium = isPremium,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
         )
     }
 }
