@@ -36,12 +36,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ui.components.AnswerState
+import com.game254studios.kakaandchui.ui.components.BubbleButton
+import com.game254studios.kakaandchui.ui.components.BubbleColor
 import com.game254studios.kakaandchui.ui.components.ConfettiOverlay
 import com.game254studios.kakaandchui.ui.components.QuizAnswerButton
 import com.game254studios.kakaandchui.ui.components.SpriteAnimation
 import com.game254studios.kakaandchui.util.ImageLoader
 import com.game254studios.kakaandchui.viewmodel.QuizViewModel
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import kotlinx.coroutines.delay
@@ -100,6 +103,7 @@ fun QuizScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             // Top bar
             Row(
@@ -256,23 +260,15 @@ fun QuizScreen(
 
             // Next button after answering
             if (state.answered) {
-                Button(
+                BubbleButton(
+                    text = "Endelea ➡",
                     onClick = { quizViewModel.nextQuestion() },
+                    color = BubbleColor.GREEN,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp, vertical = 8.dp)
-                        .height(64.dp),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary
-                    )
-                ) {
-                    Text(
-                        text = "Endelea ➡",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                }
+                        .height(64.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))

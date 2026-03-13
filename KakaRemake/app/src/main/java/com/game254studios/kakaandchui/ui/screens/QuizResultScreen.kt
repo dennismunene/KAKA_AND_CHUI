@@ -41,6 +41,9 @@ import com.game254studios.kakaandchui.data.model.Module
 import com.game254studios.kakaandchui.ads.AdManager
 import android.app.Activity
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBarsPadding
+import com.game254studios.kakaandchui.ui.components.BubbleButton
+import com.game254studios.kakaandchui.ui.components.BubbleColor
 import com.game254studios.kakaandchui.ui.components.StarRating
 import com.game254studios.kakaandchui.ui.components.SpriteAnimation
 import kotlinx.coroutines.delay
@@ -87,6 +90,7 @@ fun QuizResultScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -204,30 +208,22 @@ fun QuizResultScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
+        BubbleButton(
+            text = "Cheza Tena 🔄",
             onClick = {
                 audioPlayer.stop()
                 onPlayAgain()
             },
-            modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 64.dp),
-            shape = MaterialTheme.shapes.medium,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            )
-        ) {
-            Text(
-                text = "Cheza Tena 🔄",
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White
-            )
-        }
+            color = BubbleColor.GREEN,
+            modifier = Modifier.fillMaxWidth().height(64.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedButton(
+        BubbleButton(
+            text = "Nyumbani 🏠",
             onClick = {
                 audioPlayer.stop()
-                // Show interstitial ad for free tier during navigation transition
                 if (!isPremium && adManager != null) {
                     (context as? Activity)?.let { activity ->
                         adManager.showInterstitialIfReady(activity)
@@ -235,14 +231,8 @@ fun QuizResultScreen(
                 }
                 onBackToHome()
             },
-            modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 64.dp),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(
-                text = "Nyumbani 🏠",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+            color = BubbleColor.YELLOW,
+            modifier = Modifier.fillMaxWidth().height(64.dp)
+        )
     }
 }

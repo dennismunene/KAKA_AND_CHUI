@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -53,6 +54,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
+import com.game254studios.kakaandchui.ui.components.BubbleButton
+import com.game254studios.kakaandchui.ui.components.BubbleColor
 import com.game254studios.kakaandchui.ui.components.ConfettiOverlay
 import com.game254studios.kakaandchui.viewmodel.MemoryCard
 import com.game254studios.kakaandchui.viewmodel.MemoryMatchViewModel
@@ -111,6 +114,7 @@ fun MemoryMatchScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
         ) {
             // Top bar
             Row(
@@ -177,42 +181,26 @@ fun MemoryMatchScreen(
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    Button(
+                    BubbleButton(
+                        text = "Rudi Nyumbani 🏠",
                         onClick = {
                             audioPlayer.stop()
                             onBack()
                         },
+                        color = BubbleColor.GREEN,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp),
-                        shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        Text(
-                            text = "Rudi Nyumbani 🏠",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
-                        )
-                    }
+                            .height(64.dp)
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
-                    Button(
+                    BubbleButton(
+                        text = "Cheza Tena! 🔄",
                         onClick = { memoryMatchViewModel.loadModule(module) },
+                        color = BubbleColor.YELLOW,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp),
-                        shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
-                        Text(
-                            text = "Cheza Tena! 🔄",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
-                        )
-                    }
+                            .height(64.dp)
+                    )
                 }
             } else {
                 // Card grid

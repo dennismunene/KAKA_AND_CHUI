@@ -39,9 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game254studios.kakaandchui.audio.AudioPlayer
 import com.game254studios.kakaandchui.data.model.Module
+import com.game254studios.kakaandchui.ui.components.BubbleButton
+import com.game254studios.kakaandchui.ui.components.BubbleColor
 import com.game254studios.kakaandchui.ui.components.FlashCard
 import com.game254studios.kakaandchui.viewmodel.LearnViewModel
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
@@ -84,6 +87,7 @@ fun LearnScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
     ) {
         // Top bar
         Row(
@@ -188,26 +192,18 @@ fun LearnScreen(
 
         // Start Quiz button on last page
         if (pagerState.currentPage == items.size - 1) {
-            Button(
+            BubbleButton(
+                text = "Anza Zoezi! 🎯",
                 onClick = {
                     audioPlayer.stop()
                     onStartQuiz()
                 },
+                color = BubbleColor.GREEN,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 8.dp)
-                    .height(56.dp),
-                shape = MaterialTheme.shapes.medium,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(
-                    text = "Anza Zoezi! 🎯",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
-            }
+                    .height(56.dp)
+            )
 
             Row(
                 modifier = Modifier
@@ -215,44 +211,28 @@ fun LearnScreen(
                     .padding(horizontal = 32.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Button(
+                BubbleButton(
+                    text = "Kumbuka 🃏",
                     onClick = {
                         audioPlayer.stop()
                         onStartMemoryMatch()
                     },
+                    color = BubbleColor.YELLOW,
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary
-                    )
-                ) {
-                    Text(
-                        text = "Kumbuka 🃏",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                }
-                Button(
+                        .height(56.dp)
+                )
+                BubbleButton(
+                    text = "Sikia 🔊",
                     onClick = {
                         audioPlayer.stop()
                         onStartSoundMatch()
                     },
+                    color = BubbleColor.RED,
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text(
-                        text = "Sikia 🔊",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                }
+                        .height(56.dp)
+                )
             }
         }
 
