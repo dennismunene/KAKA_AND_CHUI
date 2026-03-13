@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
 import com.game254studios.kakaandchui.ads.AdManager
 import com.game254studios.kakaandchui.analytics.AnalyticsManager
 import com.game254studios.kakaandchui.audio.BackgroundMusicPlayer
@@ -11,6 +12,8 @@ import com.game254studios.kakaandchui.billing.BillingManager
 import com.game254studios.kakaandchui.config.RemoteConfigManager
 import com.game254studios.kakaandchui.ui.theme.KakaTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -22,23 +25,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Firebase Crashlytics — disable until user consent is obtained
+        // Lightweight — just sets a flag, safe on main thread
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
 
+        // Create manager instances (constructors are lightweight)
         analyticsManager = AnalyticsManager.getInstance(this)
         remoteConfigManager = RemoteConfigManager.getInstance()
-        remoteConfigManager.fetchAndActivate()
-
         billingManager = BillingManager(this)
-        billingManager.startConnection()
-
         adManager = AdManager(this)
-        adManager.initialize()
-        adManager.loadInterstitial()
-        adManager.loadRewarded()
 
-        BackgroundMusicPlayer.start(this)
-
+        // Render UI immediately — don't block on init
         enableEdgeToEdge()
         setContent {
             KakaTheme {
@@ -47,6 +43,22 @@ class MainActivity : ComponentActivity() {
                     adManager = adManager
                 )
             }
+        }
+
+        // Defer all heavy initialization to after first frame
+        lifecycleScope.launch(Dispatchers.Main) {
+            // These all use callbacks internally so they're fine on Main
+            // but we post them after setContent so the first frame renders fast
+            remoteConfigManager.fetchAndActivate()
+            billingManager.startConnection()
+            adManager.initialize()
+            adManager.loadInterstitial()
+            adManager.loadRewarded()
+        }
+
+        // Music init does I/O — run off main thread entirely
+        lifecycleScope.launch(Dispatchers.IO) {
+            BackgroundMusicPlayer.start(this@MainActivity)
         }
     }
 

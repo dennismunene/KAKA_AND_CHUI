@@ -47,6 +47,10 @@ import androidx.compose.material3.IconButton
 import com.game254studios.kakaandchui.util.ImageLoader
 import com.game254studios.kakaandchui.viewmodel.HomeViewModel
 import com.game254studios.kakaandchui.ui.components.BannerAdView
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.ImageBitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(
@@ -62,10 +66,16 @@ fun HomeScreen(
     val isLandscape = screenWidthDp > screenHeightDp
     val homeState by homeViewModel.state.collectAsState()
 
-    // Static images only — no heavy sprite sheet decoding
-    val menuBgBitmap = remember { ImageLoader.load(context, "gfx/mainmenu/menubg.png") }
-    val titleBitmap = remember { ImageLoader.load(context, "gfx/mainmenu/ubaotitle.png") }
-    val ubaoBitmap = remember { ImageLoader.load(context, "gfx/ubao_00001.png") }
+    // Load images off main thread to avoid jank
+    val menuBgBitmap by produceState<ImageBitmap?>(null) {
+        value = withContext(Dispatchers.IO) { ImageLoader.load(context, "gfx/mainmenu/menubg.png") }
+    }
+    val titleBitmap by produceState<ImageBitmap?>(null) {
+        value = withContext(Dispatchers.IO) { ImageLoader.load(context, "gfx/mainmenu/ubaotitle.png") }
+    }
+    val ubaoBitmap by produceState<ImageBitmap?>(null) {
+        value = withContext(Dispatchers.IO) { ImageLoader.load(context, "gfx/ubao_00001.png") }
+    }
 
     val cardSize = when {
         screenWidthDp >= 840 -> 160.dp
@@ -85,9 +95,9 @@ fun HomeScreen(
     Box(modifier = Modifier.fillMaxSize()) {
 
         // Background image (static, lightweight)
-        if (menuBgBitmap != null) {
+        menuBgBitmap?.let { bg ->
             Image(
-                bitmap = menuBgBitmap,
+                bitmap = bg,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -107,18 +117,19 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (ubaoBitmap != null) {
+                ubaoBitmap?.let { ubao ->
                     Image(
-                        bitmap = ubaoBitmap,
+                        bitmap = ubao,
                         contentDescription = "Ubao",
                         modifier = Modifier.size(64.dp).padding(end = 4.dp),
                         contentScale = ContentScale.Fit
                     )
                 }
 
-                if (titleBitmap != null) {
+                val title = titleBitmap
+                if (title != null) {
                     Image(
-                        bitmap = titleBitmap,
+                        bitmap = title,
                         contentDescription = "Ubao",
                         modifier = Modifier.height(32.dp).weight(1f, fill = false),
                         contentScale = ContentScale.FillHeight

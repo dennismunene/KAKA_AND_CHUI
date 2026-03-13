@@ -30,8 +30,8 @@ object BackgroundMusicPlayer {
                     releasePlayer()
                     true
                 }
-                prepare()
-                start()
+                setOnPreparedListener { mp -> mp.start() }
+                prepareAsync()
             }
         } catch (e: Exception) {
             Log.w(TAG, "Could not start background music", e)
