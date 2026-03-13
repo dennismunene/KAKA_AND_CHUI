@@ -23,26 +23,26 @@ object ContentRepository {
     )
 
     private val vokaliManeno = listOf(
-        LearningItem("baba", "Baba", "", "mfx/Vokali/Vokali Maneno/Baba.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Baba.aac", "Father"),
-        LearningItem("dawa", "Dawa", "", "mfx/Vokali/Vokali Maneno/Dawa.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Dawa.aac", "Medicine"),
-        LearningItem("embe", "Embe", "", "mfx/Vokali/Vokali Maneno/Embe.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Embe.aac", "Mango"),
-        LearningItem("gari", "Gari", "", "mfx/Vokali/Vokali Maneno/Gari.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Gari.aac", "Car"),
-        LearningItem("jiko", "Jiko", "", "mfx/Vokali/Vokali Maneno/Jiko.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Jiko.aac", "Stove"),
-        LearningItem("kijiko", "Kijiko", "", "mfx/Vokali/Vokali Maneno/Kijiko.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kijiko.aac", "Spoon"),
-        LearningItem("kisu", "Kisu", "", "mfx/Vokali/Vokali Maneno/Kisu.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kisu.aac", "Knife"),
-        LearningItem("kiti", "Kiti", "", "mfx/Vokali/Vokali Maneno/Kiti.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kiti.aac", "Chair"),
-        LearningItem("kuku", "Kuku", "", "mfx/Vokali/Vokali Maneno/Kuku.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kuku.aac", "Chicken"),
-        LearningItem("mama", "Mama", "", "mfx/Vokali/Vokali Maneno/Mama.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Mama.aac", "Mother"),
-        LearningItem("meli", "Meli", "", "mfx/Vokali/Vokali Maneno/Meli.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua  Meli.aac", "Ship"),
-        LearningItem("paka", "Paka", "", "mfx/Vokali/Vokali Maneno/Paka.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Paka.aac", "Cat"),
-        LearningItem("pesa", "Pesa", "", "mfx/Vokali/Vokali Maneno/Pesa.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Pesa.aac", "Money"),
-        LearningItem("pete", "Pete", "", "mfx/Vokali/Vokali Maneno/Pete.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua  Pete.aac", "Ring"),
-        LearningItem("pikipiki", "Piki Piki", "", "mfx/Vokali/Vokali Maneno/Piki Piki.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Pikipiki.aac", "Motorcycle"),
-        LearningItem("punda", "Punda", "", "mfx/Vokali/Vokali Maneno/Punda.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Punda.aac", "Donkey"),
-        LearningItem("rula", "Rula", "", "mfx/Vokali/Vokali Maneno/Rula.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Rula.aac", "Ruler"),
-        LearningItem("sufuria", "Sufuria", "", "mfx/Vokali/Vokali Maneno/Sufuria.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Sufuria.aac", "Cooking Pot"),
-        LearningItem("ua", "Ua", "", "mfx/Vokali/Vokali Maneno/Ua.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Ua.aac", "Flower"),
-        LearningItem("wembe", "Wembe", "", "mfx/Vokali/Vokali Maneno/Wembe.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Wembe.aac", "Razor"),
+        LearningItem("baba", "Baba", "gfx/somavokali/maneno/baba.png", "mfx/Vokali/Vokali Maneno/Baba.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Baba.aac", "Father"),
+        LearningItem("dawa", "Dawa", "gfx/somavokali/maneno/dawa.png", "mfx/Vokali/Vokali Maneno/Dawa.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Dawa.aac", "Medicine"),
+        LearningItem("embe", "Embe", "gfx/somavokali/maneno/embe.png", "mfx/Vokali/Vokali Maneno/Embe.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Embe.aac", "Mango"),
+        LearningItem("gari", "Gari", "gfx/somavokali/maneno/gari.png", "mfx/Vokali/Vokali Maneno/Gari.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Gari.aac", "Car"),
+        LearningItem("jiko", "Jiko", "gfx/somavokali/maneno/jiko.png", "mfx/Vokali/Vokali Maneno/Jiko.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Jiko.aac", "Stove"),
+        LearningItem("kijiko", "Kijiko", "gfx/somavokali/maneno/kijiko.png", "mfx/Vokali/Vokali Maneno/Kijiko.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kijiko.aac", "Spoon"),
+        LearningItem("kisu", "Kisu", "gfx/somavokali/maneno/kisu.png", "mfx/Vokali/Vokali Maneno/Kisu.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kisu.aac", "Knife"),
+        LearningItem("kiti", "Kiti", "gfx/somavokali/maneno/kiti.png", "mfx/Vokali/Vokali Maneno/Kiti.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kiti.aac", "Chair"),
+        LearningItem("kuku", "Kuku", "gfx/somavokali/maneno/kuku.png", "mfx/Vokali/Vokali Maneno/Kuku.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Kuku.aac", "Chicken"),
+        LearningItem("mama", "Mama", "gfx/somavokali/maneno/mama.png", "mfx/Vokali/Vokali Maneno/Mama.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Mama.aac", "Mother"),
+        LearningItem("meli", "Meli", "gfx/somavokali/maneno/meli.png", "mfx/Vokali/Vokali Maneno/Meli.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua  Meli.aac", "Ship"),
+        LearningItem("paka", "Paka", "gfx/somavokali/maneno/paka.png", "mfx/Vokali/Vokali Maneno/Paka.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Paka.aac", "Cat"),
+        LearningItem("pesa", "Pesa", "gfx/somavokali/maneno/pesa.png", "mfx/Vokali/Vokali Maneno/Pesa.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Pesa.aac", "Money"),
+        LearningItem("pete", "Pete", "gfx/somavokali/maneno/pete.png", "mfx/Vokali/Vokali Maneno/Pete.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua  Pete.aac", "Ring"),
+        LearningItem("pikipiki", "Piki Piki", "gfx/somavokali/maneno/pikipiki.png", "mfx/Vokali/Vokali Maneno/Piki Piki.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Pikipiki.aac", "Motorcycle"),
+        LearningItem("punda", "Punda", "gfx/somavokali/maneno/punda.png", "mfx/Vokali/Vokali Maneno/Punda.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Punda.aac", "Donkey"),
+        LearningItem("rula", "Rula", "gfx/somavokali/maneno/rula.png", "mfx/Vokali/Vokali Maneno/Rula.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Rula.aac", "Ruler"),
+        LearningItem("sufuria", "Sufuria", "gfx/somavokali/maneno/sufuria.png", "mfx/Vokali/Vokali Maneno/Sufuria.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Sufuria.aac", "Cooking Pot"),
+        LearningItem("ua", "Ua", "gfx/somavokali/maneno/ua.png", "mfx/Vokali/Vokali Maneno/Ua.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Ua.aac", "Flower"),
+        LearningItem("wembe", "Wembe", "gfx/somavokali/maneno/wembe.png", "mfx/Vokali/Vokali Maneno/Wembe.aac", "mfx/Vokali/Vokali Maneno Zoezi/Chagua Wembe.aac", "Razor"),
     )
 
     private val numbers = listOf(
@@ -59,16 +59,16 @@ object ContentRepository {
     )
 
     private val numbers11to20 = listOf(
-        LearningItem("t11", "Kumi na Moja", "", "", "", "Eleven (11)"),
-        LearningItem("t12", "Kumi na Mbili", "", "", "", "Twelve (12)"),
-        LearningItem("t13", "Kumi na Tatu", "", "", "", "Thirteen (13)"),
-        LearningItem("t14", "Kumi na Nne", "", "", "", "Fourteen (14)"),
-        LearningItem("t15", "Kumi na Tano", "", "", "", "Fifteen (15)"),
-        LearningItem("t16", "Kumi na Sita", "", "", "", "Sixteen (16)"),
-        LearningItem("t17", "Kumi na Saba", "", "", "", "Seventeen (17)"),
-        LearningItem("t18", "Kumi na Nane", "", "", "", "Eighteen (18)"),
-        LearningItem("t19", "Kumi na Tisa", "", "", "", "Nineteen (19)"),
-        LearningItem("t20", "Ishirini", "", "", "", "Twenty (20)"),
+        LearningItem("t11", "Kumi na Moja", "gfx/somatarakimu/t11.png", "", "", "Eleven (11)"),
+        LearningItem("t12", "Kumi na Mbili", "gfx/somatarakimu/t12.png", "", "", "Twelve (12)"),
+        LearningItem("t13", "Kumi na Tatu", "gfx/somatarakimu/t13.png", "", "", "Thirteen (13)"),
+        LearningItem("t14", "Kumi na Nne", "gfx/somatarakimu/t14.png", "", "", "Fourteen (14)"),
+        LearningItem("t15", "Kumi na Tano", "gfx/somatarakimu/t15.png", "", "", "Fifteen (15)"),
+        LearningItem("t16", "Kumi na Sita", "gfx/somatarakimu/t16.png", "", "", "Sixteen (16)"),
+        LearningItem("t17", "Kumi na Saba", "gfx/somatarakimu/t17.png", "", "", "Seventeen (17)"),
+        LearningItem("t18", "Kumi na Nane", "gfx/somatarakimu/t18.png", "", "", "Eighteen (18)"),
+        LearningItem("t19", "Kumi na Tisa", "gfx/somatarakimu/t19.png", "", "", "Nineteen (19)"),
+        LearningItem("t20", "Ishirini", "gfx/somatarakimu/t20.png", "", "", "Twenty (20)"),
     )
 
     private val shapes = listOf(
