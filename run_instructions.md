@@ -8,7 +8,7 @@ Install JDK 17 or newer. Android Studio ships one at `<Android Studio>/jbr`, and
 
 Use Android Studio's SDK Manager to install SDK Platform 35, Android SDK Build-Tools and Android SDK Platform-Tools.
 
-Gradle needs to know where the SDK is. Opening the project in Android Studio writes `KakaRemake/local.properties` for you. Otherwise set `ANDROID_HOME` yourself, or create `KakaRemake/local.properties` with a single `sdk.dir=` line pointing at the SDK. That file is deliberately untracked, so a fresh clone has neither until you do this.
+Gradle needs to know where the SDK is. Opening the project once in Android Studio writes `KakaRemake/local.properties` for you; otherwise set `ANDROID_HOME`, or create `KakaRemake/local.properties` yourself with a single `sdk.dir=` line pointing at the SDK. `local.properties` is untracked, so a fresh clone has no SDK path until you do one of these.
 
 ```bash
 export JAVA_HOME=/path/to/jdk17
