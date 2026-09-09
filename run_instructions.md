@@ -30,6 +30,17 @@ On Windows, replace `./gradlew` with `.\gradlew.bat`.
 
 The first run downloads Gradle 8.11.1 and the dependencies, so expect several minutes. APK: `app/build/outputs/apk/debug/app-debug.apk` (roughly 36 MB).
 
+### Windows PowerShell
+
+PowerShell does not read the `export` lines above, so set the variables its own way in the same session you build from:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+$env:PATH = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\platform-tools;$env:PATH"
+.\gradlew.bat :app:assembleDebug --console=plain
+```
+
 ## Run
 
 Start an emulator or connect a phone with USB debugging enabled, then:
