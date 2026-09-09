@@ -42,3 +42,21 @@ adb shell monkey -p com.game254studios.kakaandchui -c android.intent.category.LA
 With more than one device attached, find the serial with `adb devices` and add `-s SERIAL` after `adb`.
 
 Debug builds sign themselves with the local debug key, so no release keystore is needed.
+
+## Tests and checks
+
+Unit tests live in `app/src/test` and run on the JVM:
+
+```bash
+./gradlew :app:testDebugUnitTest --console=plain
+```
+
+The HTML report lands in `app/build/reports/tests/testDebugUnitTest/index.html`.
+
+`./gradlew :app:lintDebug` currently fails while resolving `androidx.compose.ui:ui-test-junit4`. The Compose BOM is applied to `implementation` but not to `androidTestImplementation`, so that dependency has no version to resolve. The same gap affects instrumentation tests. Unit tests and `assembleDebug` are unaffected.
+
+To start clean:
+
+```bash
+./gradlew clean --console=plain
+```
