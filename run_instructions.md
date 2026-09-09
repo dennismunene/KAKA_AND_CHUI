@@ -71,3 +71,18 @@ To start clean:
 ```bash
 ./gradlew clean --console=plain
 ```
+
+## Troubleshooting
+
+**"SDK location not found ... define a valid SDK location with an ANDROID_HOME environment variable or by setting the sdk.dir path"** — `local.properties` is untracked and is missing on a fresh clone. Set `ANDROID_HOME`, or open the project once in Android Studio, then build again.
+
+**Gradle picks the wrong JDK** — `gradle.properties` sets `org.gradle.java.installations.auto-detect=false`, so Gradle uses whichever JVM starts it. Point `JAVA_HOME` at JDK 17 or newer before running the wrapper. AGP 8.7.3 rejects older JDKs, and the app compiles against Java 17 source and target compatibility.
+
+**`assembleRelease` produces an unsigned APK** — the `release` signing config in `app/build.gradle.kts` is an empty placeholder and is never attached to the release build type, so there is no local keystore fallback. Release builds also enable minification and resource shrinking. These instructions cover debug builds only.
+
+## Good to know
+
+The app ships Google's AdMob test application ID in `app/src/main/AndroidManifest.xml`, so local debug builds request test ads rather than live inventory. Analytics and Crashlytics still report to the real Firebase project in `app/google-services.json` when the device is online.
+
+`KakaRemake/src`, `KakaRemake/res`, `KakaRemake/assets` and `KakaRemake/AndroidManifest.xml` are the original pre-Gradle app (package `com.game254studios`, min SDK 8). `settings.gradle.kts` includes only `:app`, so nothing there is compiled. Leave those files alone unless you are porting assets.
+
